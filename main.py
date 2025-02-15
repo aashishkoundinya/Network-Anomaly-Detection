@@ -10,7 +10,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 # Load dataset
-csv_file = "Logs.csv"  # Change this to your actual file
+csv_file = "Jain_Logs_UTF8.csv"  # Change this to your actual file
 df = pd.read_csv(csv_file)
 
 # Fix column names: Remove spaces, lowercase all
