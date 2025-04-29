@@ -1,0 +1,77 @@
+2025-04-29 10:37:15 [WARNING] - You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`. 
+2025-04-29 10:38:29 [CRITICAL] - [CRITICAL] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-04-29 10:35:34.456155
+  Type: data_exfiltration - Possible Data Exfiltration - Unusual data transfer
+  Severity: CRITICAL (Level 3)
+  Additional Types: data_exfiltration, protocol_violation, unusual_destination, excessive_traffic
+  Source: 172.20.246.197:57818 → Destination: 52.168.117.174:443
+  Protocol: TLS (tcp)
+  Packet Size: 2922 bytes (Payload: 2868 bytes)
+  Interval: 0.000071s
+  MSE Score: 90.7371, Isolation Score: -0.1022
+  Evidence:
+    - Very large payload (2868 bytes) - 8.9σ above normal
+    - Unusual protocol: TLS
+    - Connection to unusual external IP: 52.168.117.174
+    - Packet size (2922 bytes) much larger than average (164 bytes)
+
+  ACTION REQUIRED: This anomaly requires immediate investigation!
+--------------------------------------------------------------------------------
+
+2025-04-29 10:38:29 [CRITICAL] - [CRITICAL] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-04-29 10:35:34.456155
+  Type: data_exfiltration - Possible Data Exfiltration - Unusual data transfer
+  Severity: CRITICAL (Level 3)
+  Additional Types: data_exfiltration, protocol_violation, unusual_destination, excessive_traffic
+  Source: 172.20.246.197:57818 → Destination: 52.168.117.174:443
+  Protocol: TLS (tcp)
+  Packet Size: 2922 bytes (Payload: 2868 bytes)
+  Interval: 0.000071s
+  MSE Score: 90.7371, Isolation Score: -0.1022
+  Evidence:
+    - Very large payload (2868 bytes) - 8.9σ above normal
+    - Unusual protocol: TLS
+    - Connection to unusual external IP: 52.168.117.174
+    - Packet size (2922 bytes) much larger than average (164 bytes)
+
+  ACTION REQUIRED: This anomaly requires immediate investigation!
+--------------------------------------------------------------------------------
+
+2025-04-29 10:38:29 [CRITICAL] - [CRITICAL] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-04-29 10:35:34.456169
+  Type: data_exfiltration - Possible Data Exfiltration - Unusual data transfer
+  Severity: CRITICAL (Level 3)
+  Additional Types: data_exfiltration, protocol_violation, unusual_destination, excessive_traffic
+  Source: 172.20.246.197:57818 → Destination: 52.168.117.174:443
+  Protocol: TCP (tcp)
+  Packet Size: 2922 bytes (Payload: 2868 bytes)
+  Interval: 0.000014s
+  MSE Score: 90.2607, Isolation Score: -0.1032
+  Evidence:
+    - Very large payload (2868 bytes) - 8.3σ above normal
+    - Unusual protocol: TCP
+    - Connection to unusual external IP: 52.168.117.174
+    - Packet size (2922 bytes) much larger than average (167 bytes)
+
+  ACTION REQUIRED: This anomaly requires immediate investigation!
+--------------------------------------------------------------------------------
+
+2025-04-29 10:38:29 [CRITICAL] - [CRITICAL] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-04-29 10:35:34.456169
+  Type: data_exfiltration - Possible Data Exfiltration - Unusual data transfer
+  Severity: CRITICAL (Level 3)
+  Additional Types: data_exfiltration, protocol_violation, unusual_destination, excessive_traffic
+  Source: 172.20.246.197:57818 → Destination: 52.168.117.174:443
+  Protocol: TCP (tcp)
+  Packet Size: 2922 bytes (Payload: 2868 bytes)
+  Interval: 0.000014s
+  MSE Score: 90.2607, Isolation Score: -0.1032
+  Evidence:
+    - Very large payload (2868 bytes) - 8.3σ above normal
+    - Unusual protocol: TCP
+    - Connection to unusual external IP: 52.168.117.174
+    - Packet size (2922 bytes) much larger than average (167 bytes)
+
+  ACTION REQUIRED: This anomaly requires immediate investigation!
+--------------------------------------------------------------------------------
+
