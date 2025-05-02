@@ -75,3 +75,156 @@
   ACTION REQUIRED: This anomaly requires immediate investigation!
 --------------------------------------------------------------------------------
 
+2025-05-02 10:56:53 [WARNING] - You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`. 
+2025-05-02 10:57:49 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 10:56:13.859709
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1461 bytes (Payload: 1407 bytes)
+  Interval: 0.001910s
+  MSE Score: 1.2667, Isolation Score: 0.0117
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1461 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 10:57:49 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 10:56:13.859709
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1461 bytes (Payload: 1407 bytes)
+  Interval: 0.001910s
+  MSE Score: 1.2667, Isolation Score: 0.0117
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1461 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 10:58:15 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 10:56:14.310893
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1225 bytes (Payload: 1171 bytes)
+  Interval: 0.004779s
+  MSE Score: 1.0627, Isolation Score: 0.0214
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1225 bytes) is 6.7σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 10:58:15 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 10:56:14.310893
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1225 bytes (Payload: 1171 bytes)
+  Interval: 0.004779s
+  MSE Score: 1.0627, Isolation Score: 0.0214
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1225 bytes) is 6.7σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 11:08:28 [WARNING] - You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`. 
+2025-05-02 11:13:13 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 11:07:49.923508
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1484 bytes (Payload: 1430 bytes)
+  Interval: 0.002409s
+  MSE Score: 2.0294, Isolation Score: -0.0232
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1484 bytes) is 6.6σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 11:13:13 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 11:07:49.923508
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1484 bytes (Payload: 1430 bytes)
+  Interval: 0.002409s
+  MSE Score: 2.0294, Isolation Score: -0.0232
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1484 bytes) is 6.6σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 11:13:30 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 11:07:50.368391
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1491 bytes (Payload: 1437 bytes)
+  Interval: 0.000017s
+  MSE Score: 2.0656, Isolation Score: -0.0136
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1491 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 11:13:30 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.68]
+  Time: 2025-05-02 11:07:50.368391
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 0.0.0.0:5353 → Destination: 0.0.0.0:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1491 bytes (Payload: 1437 bytes)
+  Interval: 0.000017s
+  MSE Score: 2.0656, Isolation Score: -0.0136
+  Evidence:
+    - Connection to unusual external IP: 0.0.0.0
+    - Packet size (1491 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 11:34:59 [INFO] - [INFO] ANOMALY DETECTED [Confidence: 0.81]
+  Time: 2025-05-02 11:30:02.902784
+  Type: timing_anomaly - Timing-based Anomaly
+  Severity: INFO (Level 1)
+  Additional Types: timing_anomaly
+  Source: 172.20.214.201:5353 → Destination: 224.0.0.251:5353
+  Protocol: MDNS (udp)
+  Packet Size: 1470 bytes (Payload: 1416 bytes)
+  Interval: 0.025404s
+  MSE Score: 2.9235, Isolation Score: -0.0675
+  Evidence:
+    - Interval (0.0254s) is 11.6σ from mean
+    - This is mDNS multicast traffic which can often have bursts of activity
+--------------------------------------------------------------------------------
+

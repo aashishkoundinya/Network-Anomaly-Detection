@@ -19,10 +19,43 @@ import logging
 from sklearn.cluster import DBSCAN
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
+# Global logger variable
+anomaly_logger = None
+
+# Add this function to initialize logging once
+def initialize_logging():
+    """Initialize logging once to prevent duplicate handlers"""
+    global anomaly_logger
+    
+    # Configure logging with handler once
+    anomaly_logger = logging.getLogger('anomaly_logger')
+    anomaly_logger.setLevel(logging.INFO)
+    
+    # Check if handler already exists
+    if not anomaly_logger.handlers:
+        # Create handler
+        handler = logging.FileHandler(LOG_PATH, mode='a')
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s', 
+                                     datefmt='%Y-%m-%d %H:%M:%S')
+        handler.setFormatter(formatter)
+        anomaly_logger.addHandler(handler)
+    
+    return anomaly_logger
+
 def analyze_live_traffic():
     """Main function to analyze network traffic with enhanced capabilities"""
-    global autoencoder, live_data, iso_forest
+    global autoencoder, live_data, iso_forest, last_summary_time, threshold, dos_threshold
+    
     print("🚀 Starting enhanced real-time anomaly detection...")
+    
+    # Initialize logging once to prevent duplicates
+    initialize_logging()
+    
+    # Initialize periodic summary tracking
+    last_summary_time = time.time()
+    summary_interval = 30  # 30 seconds
+    last_packet_count = 0
+    last_anomaly_count = 0
     
     # Configure colored terminal output if available
     try:
@@ -97,6 +130,7 @@ def analyze_live_traffic():
     initial_training_done = models_loaded
     min_training_packets = 20000
     
+    # Only show progress bar during initial training
     packet_bar = tqdm(total=min_training_packets, desc="📡 Capturing Packets", unit="pkt")
     
     anomaly_counter = 0
@@ -122,6 +156,14 @@ def analyze_live_traffic():
     print(f"Logging anomalies to: {LOG_PATH}")
     print("Initial model training phase will begin after collecting enough data...")
     print("="*80 + "\n")
+    
+    # Set default threshold values
+    network_type = detect_network_type()
+    network_config = NETWORK_TYPES[network_type]
+    threshold = network_config['threshold']
+    dos_threshold = network_config['dos_threshold']
+    print(f"🌍 Initial network environment: {network_type}")
+    print(f"Initial detection parameters - Threshold: {threshold}, DoS Threshold: {dos_threshold}")
     
     try:
         for packet in capture.sniff_continuously():
@@ -154,7 +196,10 @@ def analyze_live_traffic():
                     # Remove oldest data
                     live_data.pop(0)
                 
-                packet_bar.update(1)
+                # Update progress bar during initial training phase
+                if not initial_training_done:
+                    packet_bar.update(1)
+                
                 total_packets += 1
                 
                 # Initial training phase
@@ -214,6 +259,10 @@ def analyze_live_traffic():
                     
                     # Start with clean slate after training
                     is_anomalous_list = [False] * len(live_data)
+                    
+                    # Do NOT reinitialize progress bar for monitoring after initial training
+                    # We'll only show summary updates every 30 seconds
+                    print("\n📡 Monitoring Network - Summary updates every 30 seconds...")
                     continue
                 
                 # Process packet for anomaly detection
@@ -242,87 +291,105 @@ def analyze_live_traffic():
                 is_anomaly_buffer.append(is_anomalous)
                 is_anomalous_list.append(is_anomalous)
                 
-                # If anomaly detected, log it and show in terminal
+                # If anomaly detected, log it (but don't print to terminal)
                 if is_anomalous:
                     anomaly_counter += 1
-                    anomaly_rate = (anomaly_counter / total_packets) * 100
                     
-                    # Only print detailed classification for significant anomalies
+                    # Only log significant anomalies to file
                     if confidence >= 0.6 and classification:
                         # Log to file
-                        log_result = log_anomaly(features, metadata, confidence, classification, 
+                        log_anomaly(features, metadata, confidence, classification, 
                                               isolation_score, mse)
                         
                         # Track severity
                         severity_level = classification['severity']
                         severity_counts[severity_level] += 1
-                        
-                        # Get color for terminal output
-                        terminal_color = COLORS[classification['color']]
-                        
-                        # Print to terminal with color formatting for visibility
-                        print("\n" + terminal_color + "!" * 80 + COLORS['reset'])
-                        
-                        # Create severity badge
-                        if severity_level == 3:
-                            severity_badge = terminal_color + "[CRITICAL]" + COLORS['reset']
-                        elif severity_level == 2:
-                            severity_badge = terminal_color + "[WARNING]" + COLORS['reset']
-                        else:
-                            severity_badge = terminal_color + "[INFO]" + COLORS['reset']
-                        
-                        print(f"{severity_badge} {terminal_color}ANOMALY DETECTED: {classification['description']}{COLORS['reset']}")
-                        print(f"Type: {classification['primary_type']}")
-                        print(f"Confidence: {confidence:.2f}, Anomaly Rate: {anomaly_rate:.2f}%")
-                        print(f"Source: {metadata['src_ip']}:{features[4]} → Dest: {metadata['dst_ip']}:{features[5]}")
-                        print(f"Protocol: {metadata['protocol_name']}, Size: {features[2]} bytes")
-                        
-                        # Show evidence detail
-                        print(f"{COLORS['bold']}Evidence:{COLORS['reset']}")
-                        for key, value in classification['details'].items():
-                            print(f"  - {value}")
-                        
-                        # Show recommendation if critical
-                        if classification['requires_immediate_action']:
-                            print(f"\n{COLORS['red']}{COLORS['bold']}ACTION REQUIRED:{COLORS['reset']} This anomaly requires immediate investigation!")
-                        
-                        print(terminal_color + "!" * 80 + COLORS['reset'])
                 
-                # Periodic statistics update
-                if total_packets % 1000 == 0:
-                    print(f"\n📊 {COLORS['bold']}Network Statistics after {total_packets} packets:{COLORS['reset']}")
-                    print(f"   - {COLORS['red']}Critical Anomalies:{COLORS['reset']} {severity_counts[3]}")
-                    print(f"   - {COLORS['orange']}Warning Anomalies:{COLORS['reset']} {severity_counts[2]}")
-                    print(f"   - {COLORS['blue']}Info Anomalies:{COLORS['reset']} {severity_counts[1]}")
-                    print(f"   - Total Anomaly Rate: {(anomaly_counter/total_packets)*100:.2f}%")
-                    print(f"   - Average Interval: {np.mean(list(intervals)):.4f}s")
-                    print(f"   - Average Packet Size: {np.mean(list(packet_sizes)):.0f} bytes")
-                    print(f"   - Unique Protocols: {len(set(protocol_tracker.values))}")
+                # Periodic summary update (every 30 seconds)
+                current_time = time.time()
+                if current_time - last_summary_time > summary_interval:
+                    # Update network type only during summary updates, not for every packet
+                    network_type = detect_network_type()
+                    network_config = NETWORK_TYPES[network_type]
+                    threshold = network_config['threshold']
+                    dos_threshold = network_config['dos_threshold']
+                    
+                    # Calculate statistics for the last interval
+                    packets_this_interval = total_packets - last_packet_count
+                    anomalies_this_interval = anomaly_counter - last_anomaly_count
+                    anomaly_rate = (anomaly_counter / total_packets) * 100
+                    
+                    # Create a comprehensive summary message
+                    print("\n" + "="*80)
+                    print(f" 📊 NETWORK MONITORING SUMMARY - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ")
+                    print("="*80)
+                    
+                    # Network type information - ONLY in the summary
+                    print(f"🌍 Network environment: {network_type}")
+                    print(f"📊 Detection parameters - Threshold: {threshold}, DoS Threshold: {dos_threshold}")
+                    
+                    # Update statistics
+                    print(f"📌 Packets analyzed (last {summary_interval}s): {packets_this_interval}")
+                    print(f"🚨 Anomalies detected (last {summary_interval}s): {anomalies_this_interval}")
+                    print(f"📈 Overall anomaly rate: {anomaly_rate:.2f}%")
+                    
+                    # Severity breakdown
+                    print(f"\n🔍 Anomaly Severity Breakdown:")
+                    print(f"   - {COLORS['red']}Critical: {severity_counts[3]}{COLORS['reset']}")
+                    print(f"   - {COLORS['orange']}Warning: {severity_counts[2]}{COLORS['reset']}")
+                    print(f"   - {COLORS['blue']}Info: {severity_counts[1]}{COLORS['reset']}")
+                    
+                    # Network metrics
+                    if len(packet_sizes) > 0:
+                        print(f"\n📍 Network Metrics:")
+                        print(f"   - Average packet size: {np.mean(list(packet_sizes)):.0f} bytes")
+                        print(f"   - Max packet size: {max(packet_sizes)} bytes")
+                        
+                    if len(intervals) > 0:
+                        print(f"   - Average interval: {np.mean(list(intervals)):.4f}s")
+                        print(f"   - Unique protocols: {len(set(protocol_tracker.values))}")
+                    
+                    # Top sources (last 1000 packets)
+                    if len(all_features) > 0:
+                        recent_src_ips = [f[0] for f in all_features[-1000:]]
+                        if recent_src_ips:
+                            from collections import Counter
+                            top_sources = Counter(recent_src_ips).most_common(3)
+                            print(f"\n📡 Top traffic sources (last 1000 packets):")
+                            for src_hash, count in top_sources:
+                                print(f"   - Source hash {src_hash}: {count} packets")
+                    
+                    print("\n" + "-"*80 + "\n")
+                    
+                    # Update for next interval
+                    last_summary_time = current_time
+                    last_packet_count = total_packets
+                    last_anomaly_count = anomaly_counter
                 
                 # Periodic model retraining to adapt to network changes
-                current_time = time.time()
                 if initial_training_done and current_time - last_training_update > training_interval and len(all_features) > 10000:
                     # Convert to numpy arrays
                     features_np = np.array(all_features[-10000:])  # Use last 10000 packets
                     anomalous_np = np.array(is_anomalous_list[-10000:])
                     
                     # Update models with new data
+                    print("\n🔄 Retraining models with updated network data...")
                     update_training(features_np, anomalous_np)
                     last_training_update = current_time
                     
                 prev_timestamp = current_timestamp
                 
             except Exception as e:
-                print(f"⚠️ Error processing packet: {e}")
                 logging.error(f"Packet processing error: {e}")
                 continue
                 
     except KeyboardInterrupt:
         print("\n👋 Stopping packet capture...")
         capture.close()
+        if packet_bar and not packet_bar.disable:
+            packet_bar.close()
     finally:
-        packet_bar.close()
-        print("\n📝 Summary:")
+        print("\n📝 Final Summary:")
         print(f"Total packets analyzed: {total_packets}")
         print(f"Anomalies detected: {anomaly_counter} ({(anomaly_counter/max(1,total_packets))*100:.2f}%)")
         print(f"  - Critical: {severity_counts[3]}")
@@ -336,14 +403,6 @@ ISO_FOREST_PATH = "iso_forest_model.pkl"
 DBSCAN_PATH = "dbscan_model.pkl"
 SCALER_PATH = "scaler_model.pkl"
 LOG_PATH = "anomalies.log"
-
-# Configure logging
-logging.basicConfig(
-    filename=LOG_PATH,
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
 
 # Enhanced buffers for better statistical analysis
 timing_buffer = deque(maxlen=10000)
@@ -385,6 +444,7 @@ COMMON_MULTICAST_ADDRESSES = [
     "224.0.0.22",   # IGMP
     "239.255.255.250",  # SSDP (Simple Service Discovery Protocol)
     "255.255.255.255",  # Broadcast
+    "0.0.0.0",  # Often used in mDNS or when IP's cant be parsed
 ]
 
 # Common service ports that have legitimate bursts of traffic
@@ -497,6 +557,105 @@ ANOMALY_TYPES = {
         'requires_immediate_action': False
     }
 }
+
+NETWORK_TYPES = {
+    'ENTERPRISE': {
+        'threshold': 0.35,  # More stringent for enterprise
+        'dos_threshold': 100,  # Higher threshold for DoS detection
+        'min_packets_for_training': 20000,
+        'expected_patterns': ['high_traffic', 'uniform_protocols']
+    },
+    'HOME': {
+        'threshold': 0.45,  # More relaxed for home networks
+        'dos_threshold': 200,  # Much higher threshold for IoT devices
+        'min_packets_for_training': 5000,  # Less data needed for pattern learning
+        'expected_patterns': ['streaming', 'iot_bursts', 'cloud_sync']
+    },
+    'SMALL_OFFICE': {
+        'threshold': 0.4,
+        'dos_threshold': 150,
+        'min_packets_for_training': 10000,
+        'expected_patterns': ['cloud_services', 'email_traffic']
+    }
+}
+
+# IoT device patterns that often trigger false positives
+IOT_PATTERNS = {
+    'ports': [554, 8080, 8008, 1900, 32400],  # RTSP, HTTP alt, SSDP, Plex
+    'protocols': ['SSDP', 'MDNS', 'DHCP', 'LLMNR'],
+    'multicast_ips': ['239.255.255.250', '224.0.0.251'],
+    'common_sizes': [range(68, 80), range(400, 600), range(1400, 1500)]
+}
+
+def detect_network_type():
+    """Automatically detect what type of network we're on"""
+    # Analyze the first N packets to determine network type
+    if len(live_data) < 1000:
+        return 'HOME'  # Default to home for small samples
+    
+    # Count unique IPs in the last 5000 packets
+    recent_packets = live_data[-5000:]
+    unique_src_ips = set()
+    for packet_data in recent_packets:
+        if len(packet_data) > 0:
+            unique_src_ips.add(packet_data[0])  # Source IP hash
+    
+    # Improved heuristics for network type detection
+    unique_ip_count = len(unique_src_ips)
+    port_variety = len(set(port_tracker.values))
+    protocol_variety = len(set(protocol_tracker.values))
+    
+    # Enterprise networks typically have many unique IPs, ports and protocols
+    if unique_ip_count > 50 or (unique_ip_count > 30 and protocol_variety > 10):
+        return 'ENTERPRISE'
+    # Home networks have fewer devices and usually fewer protocols
+    elif unique_ip_count < 15:
+        return 'HOME'
+    else:
+        return 'SMALL_OFFICE'
+
+def is_iot_traffic(features, metadata):
+    """Identify IoT device traffic patterns"""
+    src_port = features[4]
+    dst_port = features[5]
+    packet_size = features[2]
+    dst_ip = metadata.get('dst_ip', '')
+    protocol = metadata.get('protocol_name', '')
+    
+    # Check against known IoT patterns
+    if dst_port in IOT_PATTERNS['ports']:
+        return True
+    
+    if dst_ip in IOT_PATTERNS['multicast_ips']:
+        return True
+    
+    if protocol in IOT_PATTERNS['protocols']:
+        return True
+    
+    # Check for common IoT packet sizes
+    for size_range in IOT_PATTERNS['common_sizes']:
+        if isinstance(size_range, range) and packet_size in size_range:
+            return True
+        elif isinstance(size_range, int) and packet_size == size_range:
+            return True
+    
+    return False
+
+def adjust_thresholds_for_network():
+    """Dynamically adjust detection thresholds based on network type"""
+    global threshold, dos_threshold
+    
+    network_type = detect_network_type()
+    network_config = NETWORK_TYPES[network_type]
+    
+    threshold = network_config['threshold']
+    dos_threshold = network_config['dos_threshold']
+    
+    print(f"🌐 Detected network type: {network_type}")
+    print(f"📊 Adjusted threshold: {threshold}")
+    print(f"🛡️ DoS threshold: {dos_threshold}")
+    
+    return network_type
 
 class MovingStats:
     def __init__(self, window_size=100):
@@ -726,6 +885,7 @@ def update_visualization():
             
             # Ensure we have enough data points
             if len(timestamps) < 10:
+                # plt.pause(2)
                 plt.pause(2)
                 continue
             
@@ -1092,8 +1252,10 @@ def update_visualization():
             plt.pause(2)
 
 def is_anomaly(features, metadata, isolation_score, mse):
-    """Enhanced anomaly detection with severity-based classification"""
-    if len(intervals) < 50:  # Need sufficient historical data, but don't wait too long
+    """Enhanced anomaly detection with network type awareness"""
+    global threshold, dos_threshold
+    
+    if len(intervals) < 50:
         return False, 0.0, None
     
     interval = features[6]
@@ -1107,51 +1269,56 @@ def is_anomaly(features, metadata, isolation_score, mse):
     interval_zscore = abs((interval - int_mean) / max(int_std, 0.001))
     size_zscore = abs((packet_size - size_mean) / max(size_std, 0.001))
     
+    # Check if this is IoT traffic
+    is_iot = is_iot_traffic(features, metadata)
+    
     # Get percentiles of anomaly scores for adaptive thresholding
     if anomaly_scores:
         recent_scores = list(anomaly_scores)[-500:] if len(anomaly_scores) > 500 else list(anomaly_scores)
-        ae_threshold = np.percentile(recent_scores, 90)  # Lowered from 95 to be more sensitive
-        iso_threshold = np.percentile(recent_scores, 10)  # Raised from 5 to be more sensitive
+        ae_threshold = np.percentile(recent_scores, 90)
+        iso_threshold = np.percentile(recent_scores, 10)
     else:
-        ae_threshold = 0.3  # More sensitive default
-        iso_threshold = -0.3  # More sensitive default
+        ae_threshold = 0.3
+        iso_threshold = -0.3
     
     # Multiple criteria for anomaly detection with weights based on severity
-    # Higher weights for more critical anomaly patterns
     criteria = {
         # High severity criteria (weight 2.0)
-        'isolation_forest_extreme': (isolation_score < iso_threshold * 1.2, 2.0),  # Less extreme
-        'autoencoder_extreme': (mse > ae_threshold * 1.2, 2.0),  # Less extreme
-        'dos_pattern': (interval < 0.001 and len([i for i in list(intervals)[-100:] if i < 0.001]) > 60, 2.0),  # Lowered from 70
-        'extreme_size': (size_zscore > 6, 2.0),  # Lowered from 8
-        'extreme_timing': (interval_zscore > 6, 2.0),  # Lowered from 8
+        'isolation_forest_extreme': (isolation_score < iso_threshold * 1.2, 2.0),
+        'autoencoder_extreme': (mse > ae_threshold * 1.2, 2.0),
+        
+        # Adjusted DoS pattern detection based on network type
+        'dos_pattern': (interval < 0.001 and len([i for i in list(intervals)[-100:] if i < 0.001]) > dos_threshold, 2.0),
+        
+        'extreme_size': (size_zscore > 6, 2.0),
+        'extreme_timing': (interval_zscore > 6, 2.0),
         
         # Medium severity criteria (weight 1.5)
         'isolation_forest': (isolation_score < iso_threshold, 1.5),
         'autoencoder': (mse > ae_threshold, 1.5),
-        'scanning_pattern': (features[7] == 2 and len(set(port_tracker.values[-100:])) > 15, 1.5),  # Lowered from 20
-        'payload_anomaly': (features[9] > size_q3 * 2.5, 1.5),  # Lowered from 3
+        'scanning_pattern': (features[7] == 2 and len(set(port_tracker.values[-100:])) > 15, 1.5),
+        'payload_anomaly': (features[9] > size_q3 * 2.5, 1.5),
         
         # Lower severity criteria (weight 1.0)
-        'interval_spike': (interval_zscore > 3, 1.0),  # Lowered from 4
-        'size_spike': (size_zscore > 3, 1.0),  # Lowered from 4
-        'combined_spike': ((interval_zscore + size_zscore) > 5, 1.0),  # Lowered from 7
-        'rare_protocol': (features[3] not in protocol_tracker.values and len(protocol_tracker.values) > 30, 1.0),  # Lowered from 50
+        'interval_spike': (interval_zscore > 3, 1.0),
+        'size_spike': (size_zscore > 3, 1.0),
+        'combined_spike': ((interval_zscore + size_zscore) > 5, 1.0),
+        'rare_protocol': (features[3] not in protocol_tracker.values and len(protocol_tracker.values) > 30, 1.0),
     }
+    
+    # Reduce weights for IoT traffic
+    if is_iot:
+        # IoT traffic often has burst patterns that look like anomalies
+        for criterion, (condition, weight) in criteria.items():
+            if criterion in ['dos_pattern', 'interval_spike', 'timing_anomaly']:
+                criteria[criterion] = (condition, weight * 0.5)  # Reduce weight by half
     
     # Calculate weighted score
     score_sum = sum(weight for condition, weight in criteria.values() if condition)
     max_possible_score = sum(weight for _, weight in criteria.values())
     confidence = score_sum / max_possible_score
     
-    # Use more liberal thresholds - more sensitive detection
-    threshold = 0.25  # Lowered from 0.3/0.35/0.4
-    
-    # For debugging
-    triggered_criteria = [name for name, (condition, _) in criteria.items() if condition]
-    if triggered_criteria:
-        print(f"Triggered criteria: {', '.join(triggered_criteria)}")
-        print(f"Confidence score: {confidence:.3f}, Threshold: {threshold}")
+    # REMOVED DEBUG PRINTING - No more "Triggered criteria" messages
     
     # Determine if this is an anomaly
     is_anomalous = confidence >= threshold
@@ -1364,6 +1531,8 @@ def classify_anomaly(features, metadata, confidence, isolation_score):
 
 def log_anomaly(features, metadata, confidence, classification, isolation_score, mse):
     """Log detailed anomaly information to file with severity levels"""
+    global anomaly_logger
+    
     timestamp = datetime.fromtimestamp(metadata['timestamp']).strftime('%Y-%m-%d %H:%M:%S.%f')
     
     # Default severity if classification is None or missing severity info
@@ -1426,34 +1595,18 @@ def log_anomaly(features, metadata, confidence, classification, isolation_score,
     # Add separator for readability
     log_message += "-" * 80 + "\n"
     
-    # Print to console for debugging
-    print(f"\nLogging anomaly to file: {LOG_PATH}")
-    print(f"Severity: {severity_label}, Confidence: {confidence:.2f}")
-    
-    # Log to file with appropriate level and force flush
-    log_handler = logging.FileHandler(LOG_PATH, mode='a')
-    formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s', 
-                                 datefmt='%Y-%m-%d %H:%M:%S')
-    log_handler.setFormatter(formatter)
-    
-    logger = logging.getLogger('anomaly_logger')
-    logger.setLevel(logging.INFO)
-    # Remove any existing handlers to avoid duplicates
-    for handler in logger.handlers[:]:
-        logger.removeHandler(handler)
-    logger.addHandler(log_handler)
-    
-    # Log with the appropriate level
+    # Use the pre-configured logger instead of creating a new one
+    # This is what was causing duplicate logs - we were creating multiple handlers
     if severity_level == 3:
-        logger.critical(log_message)
+        anomaly_logger.critical(log_message)
     elif severity_level == 2:
-        logger.warning(log_message)
+        anomaly_logger.warning(log_message)
     else:
-        logger.info(log_message)
+        anomaly_logger.info(log_message)
     
-    # Force flush and close handler
-    log_handler.flush()
-    log_handler.close()
+    # Flush to ensure it's written
+    for handler in anomaly_logger.handlers:
+        handler.flush()
     
     # Return formatted message for terminal display with color information
     return {
