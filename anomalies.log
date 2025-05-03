@@ -228,3 +228,256 @@
     - This is mDNS multicast traffic which can often have bursts of activity
 --------------------------------------------------------------------------------
 
+2025-05-02 22:57:21 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.153885
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1001 bytes (Payload: 947 bytes)
+  Interval: 0.000271s
+  MSE Score: 838.8558, Isolation Score: -0.0274
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1001 bytes) is 7.8σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:22 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.153924
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1001 bytes (Payload: 947 bytes)
+  Interval: 0.000040s
+  MSE Score: 838.7022, Isolation Score: -0.0150
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1001 bytes) is 7.3σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:24 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.161574
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:52995 → Destination: 142.250.82.215:3478
+  Protocol: DATA (udp)
+  Packet Size: 1237 bytes (Payload: 1183 bytes)
+  Interval: 0.000077s
+  MSE Score: 225.8866, Isolation Score: 0.0066
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.215
+    - Packet size (1237 bytes) is 9.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:25 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.161596
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:52995 → Destination: 142.250.82.215:3478
+  Protocol: DATA (udp)
+  Packet Size: 1237 bytes (Payload: 1183 bytes)
+  Interval: 0.000021s
+  MSE Score: 225.9626, Isolation Score: 0.0129
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.215
+    - Packet size (1237 bytes) is 8.3σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:25 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.161628
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:52995 → Destination: 142.250.82.215:3478
+  Protocol: DATA (udp)
+  Packet Size: 1237 bytes (Payload: 1183 bytes)
+  Interval: 0.000032s
+  MSE Score: 225.9476, Isolation Score: 0.0171
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.215
+    - Packet size (1237 bytes) is 7.8σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:25 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.161653
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:52995 → Destination: 142.250.82.215:3478
+  Protocol: DATA (udp)
+  Packet Size: 1237 bytes (Payload: 1183 bytes)
+  Interval: 0.000025s
+  MSE Score: 225.9574, Isolation Score: 0.0132
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.215
+    - Packet size (1237 bytes) is 7.3σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 22:57:25 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:49.161666
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:52995 → Destination: 142.250.82.215:3478
+  Protocol: DATA (udp)
+  Packet Size: 1237 bytes (Payload: 1183 bytes)
+  Interval: 0.000013s
+  MSE Score: 225.9741, Isolation Score: 0.0112
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.215
+    - Packet size (1237 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:01:30 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:50.153953
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1100 bytes (Payload: 1046 bytes)
+  Interval: 0.004315s
+  MSE Score: 869.1453, Isolation Score: -0.0496
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1100 bytes) is 8.3σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:01:31 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:50.154031
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1101 bytes (Payload: 1047 bytes)
+  Interval: 0.000078s
+  MSE Score: 863.6516, Isolation Score: -0.0113
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1101 bytes) is 7.8σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:04:14 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:50.817067
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:44497 → Destination: 142.250.194.110:443
+  Protocol: DATA (udp)
+  Packet Size: 1294 bytes (Payload: 1240 bytes)
+  Interval: 0.001777s
+  MSE Score: 1228.7320, Isolation Score: -0.0413
+  Evidence:
+    - Connection to unusual external IP: 142.250.194.110
+    - Packet size (1294 bytes) is 8.7σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:04:15 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:50.817149
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:44497 → Destination: 142.250.194.110:443
+  Protocol: DATA (udp)
+  Packet Size: 1294 bytes (Payload: 1240 bytes)
+  Interval: 0.000082s
+  MSE Score: 1226.4573, Isolation Score: -0.0138
+  Evidence:
+    - Connection to unusual external IP: 142.250.194.110
+    - Packet size (1294 bytes) is 8.1σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:04:15 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:50.817181
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:44497 → Destination: 142.250.194.110:443
+  Protocol: DATA (udp)
+  Packet Size: 1294 bytes (Payload: 1240 bytes)
+  Interval: 0.000031s
+  MSE Score: 1226.5272, Isolation Score: -0.0077
+  Evidence:
+    - Connection to unusual external IP: 142.250.194.110
+    - Packet size (1294 bytes) is 7.6σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:08:03 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:51.757200
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1035 bytes (Payload: 981 bytes)
+  Interval: 0.005705s
+  MSE Score: 854.7972, Isolation Score: -0.0441
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1035 bytes) is 7.0σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-02 23:08:03 [WARNING] - [WARNING] ANOMALY DETECTED [Confidence: 0.62]
+  Time: 2025-05-02 22:52:51.757286
+  Type: unusual_destination - Connection to Unusual Destination
+  Severity: WARNING (Level 2)
+  Additional Types: unusual_destination, size_anomaly
+  Source: 192.168.1.50:45456 → Destination: 142.250.82.223:3478
+  Protocol: DATA (udp)
+  Packet Size: 1035 bytes (Payload: 981 bytes)
+  Interval: 0.000085s
+  MSE Score: 847.1400, Isolation Score: -0.0162
+  Evidence:
+    - Connection to unusual external IP: 142.250.82.223
+    - Packet size (1035 bytes) is 6.7σ from mean
+
+  RECOMMENDATION: Monitor this activity closely.
+--------------------------------------------------------------------------------
+
+2025-05-03 11:23:55 [INFO] - [INFO] ANOMALY DETECTED [Confidence: 0.70]
+  Time: 2025-05-03 11:18:50.381634
+  Type: behavioral - General Behavioral Anomaly
+  Severity: INFO (Level 1)
+  Additional Types: behavioral
+  Source: 172.20.216.173:0 → Destination: 224.0.0.251:0
+  Protocol: DATA (none)
+  Packet Size: 1514 bytes (Payload: 1460 bytes)
+  Interval: 0.082521s
+  MSE Score: 1519.5974, Isolation Score: -0.1133
+  Evidence:
+    - General behavioral anomaly: score=0.70, isolation=-0.11
+    - This is multicast traffic which can often have bursts of activity
+--------------------------------------------------------------------------------
+
